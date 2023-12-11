@@ -1,22 +1,29 @@
-// Sidebar.js
-import React from 'react';
+import React, { useState } from 'react';
 
 const Sidebar = ({ categories, handleFilter }) => {
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const onSelectCategory = (category) => {
+    setSelectedCategory(category);
+    handleFilter('category', category)
+  }
   return (
-    <div>
+    <div style={{width:'20vw',backgroundColor: 'rgba(211, 211, 211, 0.5)',borderRadius:10,padding:20,position:'fixed' }}>
       <h3>Filters</h3>
-      {/* Add filter options, e.g., categories */}
       <div>
-        <h4>Categories</h4>
+        <h6>Categories</h6>
         <ul>
-          {categories.map((category) => (
-            <li key={category._id} onClick={() => handleFilter('category', category.name)}>
+        <li onClick={() => onSelectCategory('all')} className={selectedCategory === 'all' ? 'selected' : ''}>
+                All
+        </li>
+          {categories?.map((category) => (
+            <li key={category._id} onClick={() => onSelectCategory(category?.name)} className={selectedCategory === category.name ? 'selected' : ''}
+            >
               {category?.name}
             </li>
           ))}
         </ul>
       </div>
-      {/* Add more filter options as needed */}
     </div>
   );
 };

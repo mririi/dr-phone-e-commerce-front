@@ -6,10 +6,9 @@ const Layout = ({ children }) => {
   return (
     <div>
       <Header />
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '20px',marginTop:100 }}>
         <CartProvider>{children}</CartProvider>
-        </div>
-      {/* You can add a footer or other elements here if needed */}
+      </div>
     </div>
   );
 };

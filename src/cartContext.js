@@ -6,7 +6,16 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
   const addToCart = (product) => {
-    setCart((prevCart) => [...prevCart, product]);
+    setCart((prevCart) => {
+      if(prevCart.length === 0){
+        return [product];
+      }
+      const itemIndex = prevCart.findIndex((item) => item._id === product._id);
+      if(itemIndex !== -1){
+        return;
+      }
+      return [...prevCart, product]
+    });
   };
 
   const removeFromCart = (productId) => {

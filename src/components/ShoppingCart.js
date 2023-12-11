@@ -1,40 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCart } from '../cartContext';
-import { Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-
+import {Col, Row} from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+const stripePromise = loadStripe('your-publishable-key');
 const ShoppingCart = () => {
   const { cart, removeFromCart } = useCart();
-
+  const [total,setTotal] = useState(0);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(cart.length === 0){
+      setTotal(0);
+      return;
+    }
+      setTotal(cart.reduce((acc,curr) => acc + curr.price,0));
+    },[cart]);
+    const checkout=()=>{
+      alert('Checkout')
+    }
+    const navigateTo = (id) => {
+      navigate(`/products/${id}`);
+    }
   return (
-    <div style={{marginLeft:150}}>
-      <h2 style={{marginBottom:50}}>Your Shopping Cart</h2>
-      <Row style={{height:100,width:'90%',backgroundColor:'lightblue',marginBottom:20,padding:20}}>
-        <div style={{flexDirection:"row", display:"flex",justifyContent:"space-between",width:'92%',paddingRight:50}}>
-        <h5 style={{width:'30%'}}>Image</h5>
-        <h5 style={{width:'30%'}}>Product</h5>
-        <h5 style={{width:'10%'}}>Price</h5>
-        <h5 style={{width:'10%'}}>Quantity</h5>
-        <h5 style={{width:'10%'}}>Sold</h5>
-        </div>
+    <Elements stripe={stripePromise}>
+    <div style={{paddingLeft:'20vh'}}>
+      <h2 style={{marginBottom:30}}>Your Shopping Cart</h2>
+      <Row style={{height:70,width:'90%',backgroundColor: 'rgba(211, 211, 211, 0.5)',display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20,paddingLeft:'10vh'}}>
+        <Col><h5>Image</h5></Col>
+        <Col><h5>Product</h5></Col>
+        <Col><h5>Price</h5></Col>
+        <Col><h5>Actions</h5></Col>
         </Row>
       {cart.map((item,index) => (
-      <Row key={index} style={{height:100,width:'90%',backgroundColor:'lightblue',marginBottom:20,padding:20,alignItems:"center",}}>
-          <div style={{flexDirection:"row", display:"flex",justifyContent:"space-between",width:'100%'}}>
-            <div style={{display:"flex",justifyContent:"space-between",width:"100%",paddingRight:50 }}>
-                <div style={{width:'30%'}}><img src={item.image} alt={item.name} style={{height:50,width:50}}/></div>
-                <h5 style={{width:'30%'}}><Link to={`/products/${item._id}`}>{item.name}</Link></h5>
-                <span style={{width:'10%'}}>{item.price}</span>
-                <span style={{width:'10%'}}>{item.quantity}</span>
-                <span style={{width:'10%'}}>{item.sold}</span>
-            </div>
-            
-            <button className='btn btn-danger' onClick={() => removeFromCart(item._id)}>Remove</button>
-          </div>
+      <Row key={index} style={{height:100,width:'90%',backgroundColor: 'rgba(211, 211, 211, 0.5)',display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20,paddingLeft:'10vh'}}>
+        <Col><img src={item.image} alt={item.name} style={{height:50,width:50}}/></Col>
+        <Col><h5 onClick={()=>navigateTo(item._id)}>{item.name}</h5></Col>
+        <Col>{item.price}</Col>
+        <Col><button className='btn btn-danger' onClick={() => removeFromCart(item._id)}>
+        <FontAwesomeIcon icon={faTrash} />
+          </button></Col>
       </Row>
-              ))}
-
+      ))}
+      {cart.length !== 0 ? <><h5>Total: {total}</h5>
+    <button className='btn btn-success' style={{marginBottom:20}} onClick={checkout}>Checkout</button></>
+    :<div style={{width:'80%',display:'flex',justifyContent:"center"}}><h5>Your cart is empty</h5></div>}
     </div>
+    </Elements>
   );
 };
 

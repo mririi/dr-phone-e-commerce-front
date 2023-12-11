@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
 import { registerUser } from '../apiService';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function Register() {
+const Register=()=> {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const userData = { fullName, email, password };
-      const response = await registerUser(userData);
-      // Handle successful registration, e.g., show a success message
-      console.log('Registration successful:', response);
+      await registerUser(userData);
+      navigate('/login');
     } catch (error) {
-      setError('Registration failed. Please try again.');
+      setError('Registration failed. Please try again.',error);
     }
   }
 
   return (
     <div className="container">
-      <div className="row justify-content-center align-items-center" style={{ height: '100vh' }}>
+      <div className="row justify-content-center align-items-center" style={{ height: '70vh' }}>
         <div className="col-md-4">
           <div className="card">
             <div className="card-body">
