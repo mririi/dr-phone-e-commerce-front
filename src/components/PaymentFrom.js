@@ -1,8 +1,10 @@
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
+import Swal from 'sweetalert2';
 
-const PaymentForm =()=> {
+const PaymentForm =({clientSecret})=> {
   const stripe = useStripe();
   const elements = useElements();
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -11,25 +13,30 @@ const PaymentForm =()=> {
       // Stripe.js has not yet loaded.
       return;
     }
-  
-    const cardElement = elements.getElement(CardElement);
-  
-    // Create a PaymentMethod using the card element.
-    const { paymentMethod, error } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement,
-    });
-  
-    // Handle the result (e.g., send payment method to your server)
+    elements.submit();
+    const { paymentMethod, error } = await stripe.createPaymentMethod({elements});
+    if(error){
+      return;
+    }
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Checked Out Successfully',
+      showConfirmButton: false,
+      timer: 1500
+    })
   };
 
+
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement />
+    <>
+    {clientSecret !== '' && <form onSubmit={handleSubmit}>
+      <PaymentElement />
       <button type="submit" disabled={!stripe}>
         Pay
       </button>
-    </form>
+    </form>}
+    </>
   );
 }
 

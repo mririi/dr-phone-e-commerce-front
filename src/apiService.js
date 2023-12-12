@@ -61,3 +61,12 @@ export const fetchProductById = async (productId) => {
     throw error;
   }
 }
+
+export const getSecretClientKey = async (amount) => {
+  try {
+    const response = await axios.post('http://localhost:5000/create-payment-intent',{amount});
+    return response.data.clientSecret;
+  } catch (error) {
+    throw error;
+  }
+}

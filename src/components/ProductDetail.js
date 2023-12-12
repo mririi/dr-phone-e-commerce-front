@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { fetchProductById } from '../apiService';
+import { Col, Row } from 'react-bootstrap';
+import Swal from 'sweetalert2';
+import { useCart } from '../cartContext';
 
 const ProductDetail = () => {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
+    const { addToCart } = useCart();
+
     useEffect(() => {
             getProductById(productId).then((data) => {
                 setProduct(data);
@@ -19,22 +24,85 @@ const ProductDetail = () => {
             throw error;
         }
     }
+    const handleAddToCart = () => {
+      addToCart(product);
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Product added to cart',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      };
 
   return (
-    <div>
-      <h2>Product Details</h2>
-      <div style={{display:"flex",flexDirection:"row"}}>
-        <img src={product?.image} alt={product?.name} style={{height:500,width:'50%'}}/>
-        <div style={{paddingLeft:50}}>
-        <h3>{product?.name}</h3>
-        <p>{product?.description}</p>
-        <p>{product?.price}</p>
-        <p>{product?.quantity}</p>
-        <p>{product?.sold}</p>
-        
+      <div style={{
+        position:'absolute',
+        top:'15%',
+        left:'10%',
+        width:'80%',
+        backgroundColor:'rgba(211, 211, 211, 0.5)',
+        height:'70vh',
+        border:'2px solid grey',
+        borderRadius:15,
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        display:'flex',
+        padding:50
+      }}>
+        <div style={{height:'100%',width:'50%',backgroundColor:'black'}}>
+        <img src={product?.image} alt={product?.name} style={{width:'100%',height:'100%'}}/>
         </div>
+        <div style={{padding:30}}>
+        <div style={{
+            position:'absolute',
+            right:'5vw',
+            top:0,
+            height:'8vh',
+            border:'2px solid grey',
+            borderTopWidth:0,
+            width:'7rem',
+            borderBottomRightRadius:15,
+            borderBottomLeftRadius:15,
+            backgroundColor:'green',
+          }}>
+            <h5 style={{
+              position:'absolute',
+              color:'white',
+              bottom:0,
+              left:10,
+              fontWeight:'700',
+              }}>{product?.price} DT</h5>
+          </div>
+        <div style={{display:"flex",flexDirection:"row",width:'100%',height:'100%',justifyContent:'space-between'}}>
+          <div style={{paddingLeft:50}}>
+          <h1>{product?.name}</h1>
+          <h5 style={{marginTop:30}}>Description</h5>
+          <p>{product?.description}</p>
+          <Row style={{marginTop:30}}>
+            <Col>
+            <h5>Category</h5>
+            <p style={{margin:5,borderRadius:10,backgroundColor:'black',color:'white',fontWeight:'bold',width:'fit-content',padding:10}}>{product?.category?.name}</p>
+          </Col>
+            <Col>
+              <h5>Quantity</h5>
+              <p style={{marginLeft:20,backgroundColor:product?.quantity>0?'green':'red',color:'white',fontWeight:'bold',width:'fit-content',padding:10,borderRadius:10}}>{product?.quantity}</p>
+            </Col>
+            <Col>
+              <h5>Sold</h5>
+              <p style={{marginLeft:5,backgroundColor:product?.sold>0?'green':'red',color:'white',fontWeight:'bold',width:'fit-content',padding:10,borderRadius:10}}>{product?.sold}</p>
+            </Col>
+            <Col>
+              <h5 style={{marginLeft:30}}>Shipping</h5>
+              <p style={{color:'white',fontWeight:'bold',width:140,padding:10,borderRadius:10,backgroundColor:product?.shippingAvailable?'green':'red',textAlign:'center'}}>{product?.shippingAvailable?'':'Not '}Available</p>
+            </Col>
+          </Row>
+          <div style={{marginTop:30}}>
+            <button style={{backgroundColor:'black',color:'white',padding:10,borderRadius:20,fontWeight:'bolder'}} onClick={()=>handleAddToCart()}>Add to Cart Now!</button>
+          </div>
+          </div>
+          </div>
         </div>
-    </div>
+      </div>
   );
 }
 

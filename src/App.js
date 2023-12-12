@@ -9,6 +9,7 @@ import ShoppingCart from './components/ShoppingCart';
 import ProductDetail from './components/ProductDetail';
 import Home from "./components/Home";
 import { AuthProvider } from './authContext';
+import Checkout from './components/Checkout';
 
 function App() {
   

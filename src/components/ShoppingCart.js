@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useCart } from '../cartContext';
 import {Col, Row} from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-const stripePromise = loadStripe('your-publishable-key');
+import Checkout from './Checkout';
 const ShoppingCart = () => {
   const { cart, removeFromCart } = useCart();
   const [total,setTotal] = useState(0);
+  const [open,setOpen] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     if(cart.length === 0){
@@ -19,13 +18,13 @@ const ShoppingCart = () => {
       setTotal(cart.reduce((acc,curr) => acc + curr.price,0));
     },[cart]);
     const checkout=()=>{
-      alert('Checkout')
+      setOpen(true);
     }
     const navigateTo = (id) => {
       navigate(`/products/${id}`);
     }
   return (
-    <Elements stripe={stripePromise}>
+    
     <div style={{paddingLeft:'20vh'}}>
       <h2 style={{marginBottom:30}}>Your Shopping Cart</h2>
       <Row style={{height:70,width:'90%',backgroundColor: 'rgba(211, 211, 211, 0.5)',display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20,paddingLeft:'10vh'}}>
@@ -47,8 +46,8 @@ const ShoppingCart = () => {
       {cart.length !== 0 ? <><h5>Total: {total}</h5>
     <button className='btn btn-success' style={{marginBottom:20}} onClick={checkout}>Checkout</button></>
     :<div style={{width:'80%',display:'flex',justifyContent:"center"}}><h5>Your cart is empty</h5></div>}
+    <Checkout open={open}/>
     </div>
-    </Elements>
   );
 };
 
