@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5000/api/";
+const API_BASE_URL = "https://dr-phone-back.onrender.com/api/";
 
 export const loginUser = async (credentials) => {
   try {
@@ -74,7 +74,7 @@ export const fetchProductById = async (productId) => {
 export const getSecretClientKey = async (amount) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/create-payment-intent",
+      "https://dr-phone-back.onrender.com/create-payment-intent",
       { amount }
     );
     return response.data.clientSecret;
