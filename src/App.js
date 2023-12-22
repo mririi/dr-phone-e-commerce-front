@@ -6,12 +6,14 @@ import {
 } from "react-router-dom";
 import { AuthProvider } from "./context/authContext";
 import Dashboard from "./components/dashboard/Dashboard";
+import Home from "./components/home/Home";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="dashboard/:token" element={<Dashboard />} />
         </Routes>
       </Router>
