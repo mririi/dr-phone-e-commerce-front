@@ -1,3 +1,4 @@
+import React from 'react';
 import HomeSlider from "./HomeSlider";
 import ProductSlider from "../products/ProductSlider";
 import { useNavigate } from "react-router-dom";

@@ -1,5 +1,5 @@
-import { Table } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { Table } from "@mui/material";
 import { deleteCategory, fetchCategories } from "../../../../services/apiService";
 
 const List = ({ onModify }) => {
