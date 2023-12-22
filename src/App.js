@@ -35,7 +35,7 @@ function App() {
             <Route path="cart" element={<ShoppingCart />} />
             <Route path="products/:productId" element={<ProductDetail />} />
           </Route>
-          <Route path="/dashboard/:token" element={<Dashboard />} />
+          <Route path="dashboard/:token" element={<Dashboard />} />
         </Routes>
       </Router>
     </AuthProvider>
