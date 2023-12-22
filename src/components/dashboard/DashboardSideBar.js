@@ -3,7 +3,6 @@ import { Dropdown, DropdownButton } from "react-bootstrap";
 
 const DashboardSideBar = ({ onContainerChange }) => {
   const onLoadContainer = (container) => {
-    console.log("clicked");
     onContainerChange(container);
   };
   return (
